@@ -85,25 +85,21 @@ const Canvas = ({ height, width, objects, tagPosition }) => {
 		context.strokeStyle = 'black';
 		objects.map((elem) => {
 			context.beginPath();
-			let a = elem.x * 100 - tagPosition.x * 10;
-			let b = elem.y * 100 - tagPosition.y * 10;
-			let dist = Math.sqrt(a * a + b * b);
-			if (dist < 50) {
-				context.strokeStyle = 'blue';
+			if (tagPosition) {
+				let a = elem.x * 100 - tagPosition.x * 10;
+				let b = elem.y * 100 - tagPosition.y * 10;
+				let dist = Math.sqrt(a * a + b * b);
+				if (dist < 50) {
+					context.strokeStyle = 'blue';
+				}
 			}
-			let x = resizeX(elem.x)/100;
-			let y = resizeY(elem.y)/100;
+			let x = resizeX(elem.x) / 100;
+			let y = resizeY(elem.y) / 100;
 			// console.log('elem.x',elem.x);
 			// console.log('elem.y',elem.y);
 			// console.log('x', x);
 			// console.log('y', y);
-			context.arc(
-				elem.y * 70,
-				elem.x * 70,
-				10,
-				0,
-				Math.PI * 2
-			);
+			context.arc(elem.y * 70, elem.x * 70, 10, 0, Math.PI * 2);
 			context.stroke();
 			// context.fillText(elem.id, elem.x * 100, elem.y * 100);
 			// context.fillStyle = 'green';
