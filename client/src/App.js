@@ -78,7 +78,6 @@ function App() {
 		ws_accelerometer.onmessage = (event) => {
 			let data;
 			data = JSON.parse(event.data);
-			console.log(data);
 			try {
 				// console.log(data[0][1] === "/euler");
 				if (data[0][1] === '/euler') {

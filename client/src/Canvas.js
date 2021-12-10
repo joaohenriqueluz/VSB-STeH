@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-
-const pixelRatio = window.devicePixelRatio;
 
 const Canvas = ({ height, width, objects, tagPosition }) => {
 	const canvas = React.useRef();
@@ -51,7 +49,6 @@ const Canvas = ({ height, width, objects, tagPosition }) => {
 
 	function drawWall(context) {
 		context.save();
-		// context.scale(pixelRatio, pixelRatio);
 		context.fillStyle = 'hsl(0, 0%, 95%)';
 		context.fillRect(0, 0, width, height);
 		context.beginPath();
@@ -73,10 +70,6 @@ const Canvas = ({ height, width, objects, tagPosition }) => {
 		if (tagPosition) {
 			context.strokeStyle = 'red';
 			context.beginPath();
-			// let tagX = resizeX(tagPosition.x)/10
-			// let tagY = resizeX(tagPosition.y)/10
-			// // console.log(tagY)
-			// // console.log(tagX)
 			context.arc(tagPosition.y * 7, tagPosition.x * 7, 10, 0, Math.PI * 2);
 			context.arc(tagPosition.y * 7, tagPosition.x * 7, 50, 0, Math.PI * 2);
 			context.stroke();
@@ -85,30 +78,18 @@ const Canvas = ({ height, width, objects, tagPosition }) => {
 		context.strokeStyle = 'black';
 		objects.map((elem) => {
 			context.beginPath();
+			context.strokeStyle = 'green';
 			if (tagPosition) {
-				let a = elem.x * 100 - tagPosition.x * 10;
-				let b = elem.y * 100 - tagPosition.y * 10;
+				let a = elem.x * 10 - tagPosition.x;
+				let b = elem.y * 10 - tagPosition.y;
 				let dist = Math.sqrt(a * a + b * b);
-				if (dist < 50) {
+				console.log(dist)
+				if (dist < 5) {
 					context.strokeStyle = 'blue';
 				}
 			}
-			let x = resizeX(elem.x) / 100;
-			let y = resizeY(elem.y) / 100;
-			// console.log('elem.x',elem.x);
-			// console.log('elem.y',elem.y);
-			// console.log('x', x);
-			// console.log('y', y);
 			context.arc(elem.y * 70, elem.x * 70, 10, 0, Math.PI * 2);
 			context.stroke();
-			// context.fillText(elem.id, elem.x * 100, elem.y * 100);
-			// context.fillStyle = 'green';
-			// context.fillText(
-			// 	elem.x * 100 + ',' + elem.y * 100,
-			// 	(elem.x + 0.1) * 100,
-			// 	(elem.y + 0.1) * 100
-			// );
-			// context.restore();
 		});
 		context.restore();
 	};
