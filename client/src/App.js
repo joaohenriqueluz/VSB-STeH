@@ -16,25 +16,27 @@ let accelerometer_message = 'accelerometer';
 function App() {
 	const [allObjectsRender, setAllPFObjectsRender] = useState([]);
 	const [pozyxPosition, setPozyxPosition] = useState();
-	const [cubeRotation, setCubeRotation] = useState({ cubeRotation: 0 });
+	const [cubeRotation, setCubeRotation] = useState({ cubeRotation: 120 });
 
 	useEffect(() => {
 		positioningFloorSocket.on('objects-update', (args) => {
 			setAllPFObjectsRender([...args]);
 			args.map((elem) => {
 				try {
-					let dist = Math.sqrt(
-						(elem.x - pozyxCoords.x) * (elem.x - pozyxCoords.x) +
-							(elem.y - pozyxCoords.y) * (elem.y - pozyxCoords.y)
-					);
-					if (dist < 0.5) {
-						let time = new Date().getTime();
-						messagesToSave.push({
-							time: time,
-							position_floor: { x: elem.x, y: elem.y },
-							pozyx_tag: { x: pozyxCoords.x, y: pozyxCoords.y },
-							accelerometer_message: accelerometer_message,
-						});
+					if (pozyxCoords) {
+						let dist = Math.sqrt(
+							(elem.x - pozyxCoords.x) * (elem.x - pozyxCoords.x) +
+								(elem.y - pozyxCoords.y) * (elem.y - pozyxCoords.y)
+						);
+						if (dist < 0.5) {
+							let time = new Date().getTime();
+							messagesToSave.push({
+								time: time,
+								position_floor: { x: elem.x, y: elem.y },
+								pozyx_tag: { x: pozyxCoords.x, y: pozyxCoords.y },
+								accelerometer_message: accelerometer_message,
+							});
+						}
 					}
 				} catch (error) {
 					console.log(error);
@@ -122,18 +124,27 @@ function App() {
 
 	return (
 		<>
-			<div className='App'>
-				<header className='App-header'>
-					<div className='visuals-container'>
-						<Canvas
-							height={800}
-							width={800}
-							objects={allObjectsRender}
-							tagPosition={pozyxPosition}
-						/>{' '}
-					</div>
-					<>
-						{/* <div className='obj-div'>
+			<div className='visuals-container'>
+				<div id='canvas-container'>
+					<Canvas
+						height={800}
+						width={800}
+						objects={allObjectsRender}
+						tagPosition={pozyxPosition}
+					/>{' '}
+				</div>
+				<aside>
+				<button onClick={saveToFile}>Export</button>
+				<div id='cube-container'>
+					<div className='container'>
+						<h4>Rotation: {cubeRotation.cubeRotation.toFixed(2)} degrees </h4>
+						<Cube size={200} rotation={cubeRotation.cubeRotation} />
+					</div>					
+				</div>
+				</aside>
+			</div>
+			<>
+				{/* <div className='obj-div'>
 							{allObjectsRender.map((elem, index) => {
 								return (
 									<div key={index}>
@@ -145,16 +156,7 @@ function App() {
 								);
 							})}
 						</div> */}
-					</>
-					<button onClick={saveToFile}>Export</button>
-				</header>
-				<div id='cube-container'>
-					<div className='container'>
-						<Cube size={200} rotation={cubeRotation.cubeRotation} />
-						<h6>Rotation: {cubeRotation.cubeRotation} degrees </h6>
-					</div>
-				</div>
-			</div>
+			</>
 		</>
 	);
 }
