@@ -4,46 +4,36 @@ import asyncio
 import websockets
 import json
 
-# from flask import Flask, jsonify, request, Response
-# from flask_socketio import *
-# from flask_cors import CORS
-# from settings import *
-# import sys
-# import logging
-# import threading
-# import time
-# import random
-# import datetime
+# ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+# Inputs
+udp_port = 8005     # Same as UDP send port in NGIMU settings
+ws_port = 8888
+# ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 
-
-# SocketIO 
-# socketio = SocketIO(app, cors_allowed_origins="*")
 # Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-#binding
+# binding
 UDPClientSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-UDPClientSocket.bind(("192.168.137.1", 8239))
+UDPClientSocket.bind(("", udp_port))
+
 
 async def handler(websocket, path):
     while True:
         try:
-            msgFromServer, addr = UDPClientSocket.recvfrom(4002)
-            # print(sys.getsizeof(msgFromServer))
+            msgFromServer, addr = UDPClientSocket.recvfrom(1024)
+
+            # Everything was ok with this code, the threading it self is not required I guess
             await websocket.send(json.dumps(osc_decoder.decode(msgFromServer)))
+
+            # This right here was the problem, if not called to sleep, data would buffer up and only send in batch
+            await asyncio.sleep(0)
+
         except socket.error as e:
             print(e)
-            pass
-        # else:
-            # for message in osc_decoder.decode(msgFromServer):
-            #     print(UDPClientSocket.getsockname(), message)
-            # await websocket.send(json.dumps(osc_decoder.decode(msgFromServer)))
-            # await asyncio.sleep(1)
+        pass
 
 if __name__ == '__main__':
-    # socketio.run(app, debug=True)
-    start_server = websockets.serve(handler, "127.0.0.1", 8888)
+    start_server = websockets.serve(handler, "127.0.0.1", ws_port)
 
     asyncio.get_event_loop().run_until_complete(start_server)
     asyncio.get_event_loop().run_forever()
-        
-
