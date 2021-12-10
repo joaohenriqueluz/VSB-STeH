@@ -5,27 +5,6 @@ const pixelRatio = window.devicePixelRatio;
 
 const Canvas = ({ height, width, objects, tagPosition }) => {
 	const canvas = React.useRef();
-	const room2 = [
-		{ x: 0, y: 0 },
-		{ x: 0, y: 7 },
-		{ x: 2, y: 7 },
-		{ x: 2, y: 7.2 },
-		{ x: 0, y: 7.2 },
-		{ x: 0, y: 11.7 },
-		{ x: 4.5, y: 11.7 },
-		{ x: 4.5, y: 8.7 },
-		{ x: 2.95, y: 8.7 },
-		{ x: 2.95, y: 7 },
-		{ x: 7.05, y: 7 },
-		{ x: 7.05, y: 7.7 },
-		{ x: 9.6, y: 7.7 },
-		{ x: 9.6, y: 9.7 },
-		{ x: 11.6, y: 9.7 },
-		{ x: 11.6, y: 6.2 },
-		{ x: 7, y: 6.2 },
-		{ x: 7, y: 0 },
-		{ x: 0, y: 0 },
-	];
 	const room = [
 		{ x: 6.2, y: 0 },
 		{ x: 6.2, y: 4.6 },

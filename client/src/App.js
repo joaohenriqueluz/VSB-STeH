@@ -10,20 +10,13 @@ const ws_accelerometer = new WebSocket('ws://127.0.0.1:8888/');
 const ws_pozyx = new WebSocket('ws://localhost:8080/', 'echo-protocol');
 
 let messagesToSave = [];
-let pozyxCoords = { x: 0, y: 0 };
+let pozyxCoords;
 let accelerometer_message = 'accelerometer';
 
 function App() {
 	const [allObjectsRender, setAllPFObjectsRender] = useState([]);
-	const [pozyxPosition, setPozyxPosition] = useState({ x: 0, y: 0 });
+	const [pozyxPosition, setPozyxPosition] = useState();
 	const [cubeRotation, setCubeRotation] = useState({ cubeRotation: 0 });
-
-	let previous_time;
-	let current_angle = 0;
-
-	const handleScroll = () => {
-		setCubeRotation({ cubeRotation: window.scrollY });
-	};
 
 	useEffect(() => {
 		positioningFloorSocket.on('objects-update', (args) => {
@@ -117,8 +110,6 @@ function App() {
 			console.log('Closed Accelerometer Connection!');
 		};
 		//---------------------------------------------------
-
-		// window.addEventListener('scroll', handleScroll.bind(this));
 	}, []);
 
 	const saveToFile = () => {
